@@ -1,15 +1,23 @@
 package com.ron.springboot_api.api;
 
 import com.ron.springboot_api.domain.Book;
+import com.ron.springboot_api.dto.BookDTO;
+import com.ron.springboot_api.exception.InvalidRequestException;
+import com.ron.springboot_api.exception.NotFoundException;
 import com.ron.springboot_api.service.BookService;
+import com.ron.springboot_api.util.CustomBeanUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,12 +30,55 @@ public class BookApi {
     @GetMapping("/books")
     public ResponseEntity<?> listAllBooks() {
         List<Book> books = bookService.findAllBooks();
+        if (books.isEmpty()) {
+            throw new NotFoundException("Books Not Found");
+        }
         return new ResponseEntity<List<Book>>(books, HttpStatus.OK);
     }
 
     @GetMapping("/books/{id}")
     public ResponseEntity<?> getBook(@PathVariable Long id) {
         Book book = bookService.getBookById(id);
+        if (book == null) {
+            throw new NotFoundException(String.format("book by id %s not found",id));
+        }
         return new ResponseEntity<>(book, HttpStatus.OK);
+    }
+
+    @PostMapping("/books")
+    public ResponseEntity<?> saveBook(@Valid @RequestBody BookDTO bookDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException("Invalid parameter", bindingResult);
+        }
+        Book book1 = bookService.saveBook(bookDTO.convertToBook());
+        return new ResponseEntity<>(book1, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/books/{id}")
+    public ResponseEntity<?> updateBook(@PathVariable Long id,@Valid @RequestBody BookDTO bookDTO,BindingResult bindingResult) {
+
+        Book currentBook = bookService.getBookById(id);
+        if (currentBook == null) {
+            throw new NotFoundException(String.format("book by id %s not found",id));
+        }
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException("Invalid parameter", bindingResult);
+        }
+        //        BeanUtils.copyProperties(bookDTO, currentBook);
+        bookDTO.convertToBook(currentBook);
+        Book book1 = bookService.updateBook(currentBook);
+        return new ResponseEntity<>(book1, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
+        bookService.deleteBookById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/books")
+    public ResponseEntity<?> deleteAllBook() {
+        bookService.deleteAllBooks();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
