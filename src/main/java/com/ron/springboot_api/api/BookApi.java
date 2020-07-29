@@ -5,19 +5,13 @@ import com.ron.springboot_api.dto.BookDTO;
 import com.ron.springboot_api.exception.InvalidRequestException;
 import com.ron.springboot_api.exception.NotFoundException;
 import com.ron.springboot_api.service.BookService;
-import com.ron.springboot_api.util.CustomBeanUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,7 +40,7 @@ public class BookApi {
     }
 
     @PostMapping("/books")
-    public ResponseEntity<?> saveBook(@Valid @RequestBody BookDTO bookDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> saveBook(@Validated @RequestBody BookDTO bookDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidRequestException("Invalid parameter", bindingResult);
         }
@@ -55,14 +49,14 @@ public class BookApi {
     }
 
     @PutMapping("/books/{id}")
-    public ResponseEntity<?> updateBook(@PathVariable Long id,@Valid @RequestBody BookDTO bookDTO,BindingResult bindingResult) {
+    public ResponseEntity<?> updateBook(@PathVariable Long id,@Validated @RequestBody BookDTO bookDTO,BindingResult bindingResult) {
 
         Book currentBook = bookService.getBookById(id);
         if (currentBook == null) {
             throw new NotFoundException(String.format("book by id %s not found",id));
         }
         if (bindingResult.hasErrors()) {
-            throw new InvalidRequestException("Invalid parameter", bindingResult);
+            throw new InvalidRequestException("Invalid parameter",bindingResult);
         }
         //        BeanUtils.copyProperties(bookDTO, currentBook);
         bookDTO.convertToBook(currentBook);
