@@ -5,7 +5,6 @@ import com.ron.springboot_api.util.CustomBeanUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.BeanUtils;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
