@@ -4,7 +4,7 @@
     <contextName>logback</contextName>
 
     <!--设置日志文件保存目录和名字-->
-    <property name="log.path" value="/Users/limi/Desktop/logback.log" />
+    <property name="log.path" value="/mylog/logback.log" />
 
     <!--输出到控制台 设置-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -32,7 +32,7 @@
         <file>${log.path}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--定义日志切分方式，把每一天的日志归档一个文件中-->
-            <fileNamePattern>/Users/limi/Desktop/logback.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/mylog/logback.%d{yyyy-MM-dd}.log</fileNamePattern>
             <!--保留最近30天的日志-->
             <maxHistory>30</maxHistory>
             <!--指定日志文件的上限大小,设置为200M的话，那么到了这个值，就会删除旧的日志。-->
@@ -53,7 +53,7 @@
     指定com.lrm.api.LogTestController类日志级别为WARN和大于WARN的日志信息由名为console的appender处理
     additivity="false" 不再向上级root传递打印信息
     -->
-    <logger name="com.lrm.api.LogTestApi" level="WARN" additivity="false">
+    <logger name="com.ron.springboot_api.LogTestApi" level="WARN" additivity="false">
         <appender-ref ref="console"/>
     </logger>
 
@@ -67,12 +67,12 @@
 
     <!-- 测试环境+开发环境. 多个使用逗号隔开. -->
     <springProfile name="develop">
-        <logger name="com.lrm.api.LogTestApi" level="debug" />
+        <logger name="com.ron.springboot_api.LogTestApi" level="debug" />
     </springProfile>
 
     <!-- 生产环境 -->
     <springProfile name="production">
-        <logger name="com.lrm.api.LogTestApi" level="ERROR" />
+        <logger name="com.ron.springboot_api.LogTestApi" level="ERROR" />
     </springProfile>
 
 

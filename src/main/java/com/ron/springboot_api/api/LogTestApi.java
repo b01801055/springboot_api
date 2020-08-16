@@ -13,14 +13,15 @@ public class LogTestApi {
     @GetMapping("/log")
     public String log() {
 
-        String name = "Ron";
-        String email = "grgdrgrg@gmail.com";
-        logger.info("info -- log");
-        logger.warn("warn -- log");
-        logger.error("error -- log");
-        logger.debug("debug -- log");
-        logger.trace("trace -- log");
-        logger.info("name : {}, email : {}",name,email);
+        logger.info("-------log-------");
+//        String name = "Ron";
+//        String email = "grgdrgrg@gmail.com";
+//        logger.info("info -- log");
+//        logger.warn("warn -- log");
+//        logger.error("error -- log");
+//        logger.debug("debug -- log");
+//        logger.trace("trace -- log");
+//        logger.info("name : {}, email : {}",name,email);
 
         return "logtest";
     }
