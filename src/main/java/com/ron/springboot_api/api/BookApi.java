@@ -36,7 +36,7 @@ public class BookApi {
         if (book == null) {
             throw new NotFoundException(String.format("book by id %s not found",id));
         }
-        return new ResponseEntity<>(book, HttpStatus.OK);
+        return new ResponseEntity<Object>(book, HttpStatus.OK);
     }
 
     @PostMapping("/books")
@@ -45,7 +45,7 @@ public class BookApi {
             throw new InvalidRequestException("Invalid parameter", bindingResult);
         }
         Book book1 = bookService.saveBook(bookDTO.convertToBook());
-        return new ResponseEntity<>(book1, HttpStatus.CREATED);
+        return new ResponseEntity<Object>(book1, HttpStatus.CREATED);
     }
 
     @PutMapping("/books/{id}")
@@ -61,18 +61,18 @@ public class BookApi {
         //        BeanUtils.copyProperties(bookDTO, currentBook);
         bookDTO.convertToBook(currentBook);
         Book book1 = bookService.updateBook(currentBook);
-        return new ResponseEntity<>(book1, HttpStatus.OK);
+        return new ResponseEntity<Object>(book1, HttpStatus.OK);
     }
 
     @DeleteMapping("/books/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
         bookService.deleteBookById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/books")
     public ResponseEntity<?> deleteAllBook() {
         bookService.deleteAllBooks();
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
     }
 }

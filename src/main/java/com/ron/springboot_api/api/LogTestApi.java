@@ -12,7 +12,7 @@ public class LogTestApi {
 
     @GetMapping("/log")
     public String log() {
-
+        int i = 4/0;
         logger.info("-------log-------");
 //        String name = "Ron";
 //        String email = "grgdrgrg@gmail.com";
